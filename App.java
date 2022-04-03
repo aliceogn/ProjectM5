@@ -1,20 +1,22 @@
 import java.util.Arrays;
 
 public class App {
-    private Visor Visor;
+    private Visor visor;
     private Llista llista;
     private Categoria[] categories;
     private static App instancia;
 
-    private App() { }
+    private App() { 
+        llista = Llista.getInstance(); 
+    }
     // fem un singleton perquè només utilitzarem una App
-    private static App getApp() { 
+    private static App getInstance() { 
         if (instancia == null) {
             instancia = new App();
         }
         return instancia;
     }
-    // Esta función muestra por pantalla estándar las categorías disponibles
+    // Aquesta funció mostra per sortida estàndar les categories disponibles
     private void mostraCategories() {
         for (int i = 0; i < categories.length; i++) {
             System.out.println(categories[i]);   // fer toString
@@ -87,7 +89,7 @@ public class App {
         System.out.println("\nIndica la opció escollida");
     }
     public static void main(String[] args) {
-        App app = getApp();
+        App app = getInstance();
         boolean volSortir = false;
         while(!volSortir) {
             mostraMenuPrincipal();
@@ -125,13 +127,17 @@ public class App {
                     System.out.println("Està segur?");
                     System.out.println("\n0. No");
                     System.out.println("\n1. Si");
-                    int resposta = Integer.parseInt(Entrada.readLine());
-                    if (resposta == 1) {
-                        app.esborraCategoria(categoriaAEsborrar);
+                    int resposta3 = Integer.parseInt(Entrada.readLine());
+                    if (resposta3 == 1) {
+                        app.esborrarArticle(articleAEsborrar); // fer funció per agafar article 
                     } 
                     else {
                         mostraMenuPrincipal();
                     }
+                    break;
+                case 10:
+                    volSortir = true;
+                    System.out.println("Fins aviat!");
             }
         }
     }

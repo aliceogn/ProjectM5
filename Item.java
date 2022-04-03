@@ -2,6 +2,10 @@ public class Item {
     private int quantitat;
     private Article article;
 
+    public Item(int quantitat, Article article) {
+        setQuantitat(quantitat);
+        setArticle(article);
+    }
     public int getQuantitat(){
         return this.quantitat;
     }
