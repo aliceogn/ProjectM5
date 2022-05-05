@@ -6,7 +6,10 @@ public class Article {
         setNom(nom);
         setCategoria(categoria);
     }
-
+    public Article(String nom, String categoria) {
+        setNom(nom);
+        setCategoria(new Categoria(categoria));
+    }
     public String getNom() { return nom; }
     public Categoria getCategoria() { return categoria; }
     public void setNom(String nom) {

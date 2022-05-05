@@ -3,7 +3,11 @@ public class Categoria {
     private Article[] articles;
     public int counter = 0;
     public Categoria(String nom, Article[] articles) {
-        setNom(this.nom);
+        setNom(nom);
+        setArticles(articles);
+    }
+    public Categoria(String nom) {
+        setNom(nom);
         setArticles(this.articles);
     }
     public void setNom(String nom) {
@@ -14,21 +18,21 @@ public class Categoria {
     public String getNom() {
         return nom;
     }
-    public Article[] setArticles(Article[] articles) {
-        articles = this.articles;
+    public void setArticles(Article[] articles) {
+        this.articles = articles;
     }
     public Article createArticle(String nom) {
         System.out.println("Categoria?");
-        String categorie = Entrada.readLine();
-        Categoria(categorie, addArticle(this.nom));
+        String categ = Entrada.readLine();
+        return new Article(nom, categ);
     }
-    public static void addArticle(String nameArticle) {
-        Atricle[] newArray = Article[articles.length + 1];
+    public Article[] addArticle(String nameArticle, String nameCateg) {
+        Article[] newArray = new Article[articles.length + 1];
         //assign values of existing articles
         for (int i = 0; i > articles.length; i++) {
             newArray[i] = articles[i];
         }
-        newArray[articles.length + 1] = nameArticle;
+        newArray[articles.length + 1] = new Article(nameArticle, nameCateg);
         return newArray;
     }
 }
