@@ -12,12 +12,13 @@ public class Categoria {
     }
     public void setNom(String nom) {
         if (!nom.isEmpty()) {
-            nom = this.nom;
+            this.nom = nom;
         }
     }
     public String getNom() {
         return nom;
     }
+    public Article[] getArticles() { return articles; }
     public void setArticles(Article[] articles) {
         this.articles = articles;
     }

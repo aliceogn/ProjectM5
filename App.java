@@ -8,6 +8,7 @@ public class App {
 
     private App() { 
         llista = Llista.getInstance(); 
+        categories = new Categoria[0];
     }
     // fem un singleton perquè només utilitzarem una App
     private static App getInstance() { 
@@ -18,8 +19,9 @@ public class App {
     }
     // Aquesta funció mostra per sortida estàndar les categories disponibles
     private void mostraCategories() {
+        System.out.println("Categories:");
         for (int i = 0; i < categories.length; i++) {
-            System.out.println(categories[i]);   // fer toString
+            System.out.println(categories[i].getNom() + "\n");   // fer toString
         }
     }
     private void afegeixCategoria(String nom) {
@@ -31,10 +33,9 @@ public class App {
         // esborrar els articles de la categoria abans
         
         Categoria[] newArray = new Categoria[categories.length - 1];
-
+        int j = 0;
         for (int i = 0; i < categories.length; i++) {
             if (categories[i].getNom() != categoria.getNom()) { 
-                int j = 0;
                 newArray[j] = categories[i];
                 j++;
             }
@@ -42,11 +43,20 @@ public class App {
         this.categories = newArray;
     }
     private void afegirArticle(String nom, Categoria categoria) {
-        categoria.createArticle(nom);
+        categoria.addArticle(nom, categoria.getNom());
     }
     private void esborrarArticle(Article article) {
         // esborrar items abans
         Article[] articles = article.getCategoria().getArticles();
+        Article[] newArray = new Article[articles.length - 1];
+        int j = 0;
+        for (int i = 0; i < articles.length; i++) {
+            if (articles[i].getNom() != article.getNom()) {   
+                newArray[j] = articles[i];
+                j++;
+            }
+        }
+        article.getCategoria().setArticles(newArray);
     }
     private void afegirItem() {
 
@@ -55,13 +65,29 @@ public class App {
 
     }
     private void seleccionaVisor() {
-
+        System.out.println("Sel·lecciona visor: \n");
+        System.out.println("\t1. Visor en text pla");
+        System.out.println("\t2. Visor en format JSON");
+        System.out.println("\t3. Visor en format CSV");
+        int resposta = Integer.parseInt(Entrada.readLine());
+        if (resposta == 1) {
+            visor = new VisorTxt();
+        }
+        else if (resposta == 2) {
+            visor = new VisorJson();
+        }
+        else if (resposta == 3) {
+            visor = new VisorCsv();
+        }
+        else {
+            System.out.println("Opció incorrecta");
+        }
     }
     private String mostraLlista() {
-
+        return visor.mostra(llista);
     }
     private String mostraLlista(Categoria categoria) {
-
+        return visor.mostra(llista, categoria);
     }
     // Aquest mètode busca, a partir del nom donat, la categoria a la qual pertany i la retorna
     private Categoria trobaCategoria(String nom) {
@@ -72,20 +98,31 @@ public class App {
         }
         return null;  // si no ha trobat la categoria amb el nom que se li ha passat retornem null
     }
+
+    private Article trobaArticle(String nom) {
+        for (Categoria categoria: categories) {
+            for (Article article: categoria.getArticles()) {
+                if (article.getNom().equals(nom)) {
+                    return article;
+                }
+            }
+        }
+        return null;
+    }
     private static void mostraMenuPrincipal () {
         System.out.println("MENU PRINCIPAL\n");
         System.out.println("Opcions: \n");
-        System.out.println("0. Afegir categoria");
-        System.out.println("1. Esborrar categoria");
-        System.out.println("2. Afegir article");
-        System.out.println("3. Esborrar article");
-        System.out.println("4. Afegir item");
-        System.out.println("5. Esborrar item");
-        System.out.println("6. Mostrar categories");
-        System.out.println("7. Seleccionar visor");
-        System.out.println("8. Mostrar llista");
-        System.out.println("9. Mostrar llista per categories");
-        System.out.println("10. Sortir del programa");
+        System.out.println("\t0. Afegir categoria");
+        System.out.println("\t1. Esborrar categoria");
+        System.out.println("\t2. Afegir article");
+        System.out.println("\t3. Esborrar article");
+        System.out.println("\t4. Afegir item");
+        System.out.println("\t5. Esborrar item");
+        System.out.println("\t6. Mostrar categories");
+        System.out.println("\t7. Seleccionar visor");
+        System.out.println("\t8. Mostrar llista");
+        System.out.println("\t9. Mostrar llista d'una categoria");
+        System.out.println("\t10. Sortir del programa");
         System.out.println("\nIndica la opció escollida");
     }
     public static void main(String[] args) {
@@ -98,20 +135,19 @@ public class App {
                 case 0:
                     System.out.println("Anomena la nova categoria");
                     app.afegeixCategoria(Entrada.readLine()); // mirar array de artículos??
+                    System.out.println("Categoria afegida\n"); 
                     break;
                 case 1:
                     app.mostraCategories();
                     System.out.println("Quina categoria vol esborrar?");
                     Categoria categoriaAEsborrar = app.trobaCategoria(Entrada.readLine());
                     System.out.println("Està segur?");
-                    System.out.println("\n0. No");
-                    System.out.println("\n1. Si");
+                    System.out.println("\t0. No");
+                    System.out.println("\t1. Si");
                     int resposta = Integer.parseInt(Entrada.readLine());
                     if (resposta == 1) {
                         app.esborraCategoria(categoriaAEsborrar);
-                    }
-                    else {
-                        mostraMenuPrincipal();
+                        System.out.println("Categoria esborrada\n");
                     }
                     break;
                 case 2: 
@@ -124,20 +160,46 @@ public class App {
                 case 3: 
                     System.out.println("Quin article vol esborrar?");
                     String articleAEsborrar = Entrada.readLine();
+                    Article article = app.trobaArticle(articleAEsborrar);
                     System.out.println("Està segur?");
-                    System.out.println("\n0. No");
-                    System.out.println("\n1. Si");
+                    System.out.println("\t0. No");
+                    System.out.println("\t1. Si");
                     int resposta3 = Integer.parseInt(Entrada.readLine());
                     if (resposta3 == 1) {
-                        app.esborrarArticle(articleAEsborrar); // fer funció per agafar article 
-                    } 
+                        if (article != null) {
+                            app.esborrarArticle(article);
+                            System.out.println("Article esborrat\n");
+                        }
+                        else {
+                            System.out.println("Article no trobat\n");
+                        }
+                    }
+                    break;
+                case 6: 
+                    app.mostraCategories();
+                    break;
+                case 7:
+                    app.seleccionaVisor();
+                    break;
+                case 8:
+                    System.out.println(app.mostraLlista());
+                    break;
+                case 9:
+                    System.out.println("De quina categoria vol veure la llista?");
+                    app.mostraCategories();
+                    String entrada = Entrada.readLine();
+                    Categoria categoria = app.trobaCategoria(entrada);
+                    if (categoria != null) {
+                        System.out.println(app.mostraLlista(categoria));
+                    }
                     else {
-                        mostraMenuPrincipal();
+                        System.out.println("ERROR: Categoria no trobada");
                     }
                     break;
                 case 10:
                     volSortir = true;
                     System.out.println("Fins aviat!");
+                    break;
             }
         }
     }
