@@ -4,13 +4,16 @@ public class Llista {
     private Item[] items;
     private static Llista instancia;
 
-    private Llista() { }
+    private Llista() { 
+        items = new Item[0];
+    }
     public static Llista getInstance() {
         if (instancia == null) {
             instancia = new Llista();
         }
         return instancia;
     }
+    public Item[] getItems() { return items; }
     public void addItem(Item item) {  
         items = Arrays.copyOf(items, items.length + 1 );   
         items[items.length - 1] = item;   
