@@ -58,12 +58,21 @@ public class App {
         }
         article.getCategoria().setArticles(newArray);
     }
-    private void afegirItem(String nouItem, int quants) {
-        Item item = new Item(nouItem, quants);
+    private void afegirItem(Article article, int quants) {
+        Item item = new Item(quants, article);
         llista.addItem(item);
     }
     private void esborrarItem(Item item) {
         llista.removeItem(item);
+    }
+    private Item trobaItem(String nom) {
+        for (Item item: llista.getItems()) {
+              Article articleI = item.getArticle();
+                if (articleI.getNom().equals(nom)) {
+                    return item;
+            }
+        }
+        return null;
     }
     private void seleccionaVisor() {
         System.out.println("Sel·lecciona visor: \n");
@@ -106,15 +115,6 @@ public class App {
                 if (article.getNom().equals(nom)) {
                     return article;
                 }
-            }
-        }
-        return null;
-    }
-    private Item trobaItem(String nom) {
-        for (Item item: item) {
-                articleI = item.getArticle()
-                if (articleI.getNom().equals(nom)) {
-                    return item;
             }
         }
         return null;
@@ -188,12 +188,13 @@ public class App {
                 case 4:
                     System.out.println("Quin article vol afegir?");
                     String articleAItem = Entrada.readLine();
-                    if(trobaArticle(articleAItem) != null){
+                    if(app.trobaArticle(articleAItem) != null){
+                        Article articleItem = app.trobaArticle(articleAItem);
                         System.out.println("Indiqui la quantitat");
                         int quants = Integer.parseInt(Entrada.readLine());
-                        afegirItem(articleAItem, quants);
+                        app.afegirItem(articleItem, quants);
                     }else{
-                        System.out.println("Aquest article no existeix\n")
+                        System.out.println("Aquest article no existeix\n");
                     }
                     break;
                 case 5:

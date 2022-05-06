@@ -33,4 +33,5 @@ public class Llista {
         }
         items = newArray;
     }
+   
 }
