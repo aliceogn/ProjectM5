@@ -19,9 +19,9 @@ public class App {
     }
     // Aquesta funció mostra per sortida estàndar les categories disponibles
     private void mostraCategories() {
-        System.out.println("Categories:");
+        System.out.println("Categories existents:");
         for (int i = 0; i < categories.length; i++) {
-            System.out.println(categories[i].getNom() + "\n");   // fer toString
+            System.out.println(categories[i].getNom());   // fer toString
         }
     }
     private void afegeixCategoria(String nom) {
@@ -43,7 +43,7 @@ public class App {
         this.categories = newArray;
     }
     private void afegirArticle(String nom, Categoria categoria) {
-        categoria.addArticle(nom, categoria.getNom());
+        categoria.addArticle(nom, categoria);
     }
     private void esborrarArticle(Article article) {
         // esborrar items abans
@@ -137,6 +137,7 @@ public class App {
     }
     public static void main(String[] args) {
         App app = getInstance();
+        app.visor = new VisorTxt();
         boolean volSortir = false;
         while(!volSortir) {
             mostraMenuPrincipal();
@@ -164,8 +165,10 @@ public class App {
                     System.out.println("Anomena el nou article");
                     String nomArticle = Entrada.readLine();
                     System.out.println("A quina categoria pertany?");
+                    app.mostraCategories();
                     Categoria categoriaEscollida = app.trobaCategoria(Entrada.readLine());
                     app.afegirArticle(nomArticle, categoriaEscollida);
+                    System.out.println("Article afegit");
                     break;
                 case 3: 
                     System.out.println("Quin article vol esborrar?");
@@ -193,6 +196,7 @@ public class App {
                         System.out.println("Indiqui la quantitat");
                         int quants = Integer.parseInt(Entrada.readLine());
                         app.afegirItem(articleItem, quants);
+                        System.out.println("Item afegit");
                     }else{
                         System.out.println("Aquest article no existeix\n");
                     }
